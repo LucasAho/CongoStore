@@ -11,12 +11,45 @@ var connection = mysql.createConnection({
     database: "bamazon_db"
 });
 
+
+
+
 connection.connect(err => {
     if (err) throw err;
     runFunc();
-})
+});
 
+stonkCheck = (id , num) => {
+    
+    connection.query("SELECT * FROM products WHERE ID="+ id, function(err, resp) {
+        if (err) throw err;
+        var stonkLeft = resp[0].stock_quantity;
+        var stonkWant = num;
+        if (stonkLeft >= stonkWant) {
+            console.log("stonks");
+        } else {
+            console.log("out of stonks, only " + stonkLeft + " remaining");
+        }
+    });
+    connection.end();  
+}
 
+amountQuery = (ans) => {
+    inquirer.prompt({
+        message: "How much of item " + ans + " would you like to purchase? \n",
+        name: "ItemAmount",
+        type: "input", 
+        validate: value => {
+            if (isNaN(value) === false) {
+                return true;
+            }
+            return false;
+        }
+    }).then(answer => {
+        stonkCheck(ans , answer.ItemAmount);
+        
+    });
+}
 
 runFunc = () => {
     connection.query("SELECT * FROM products", function(err,res) {
@@ -24,6 +57,7 @@ runFunc = () => {
         
         res.forEach(element => {
             console.log("ID: " + element.id + " || Name: " + element.product_name + " || Price: " + element.price);
+            console.log("The quantity left is: " + element.stock_quantity);
         });
         inquirer.prompt({
             message: "What is the ID of the item you would like to purchase \n",
@@ -36,9 +70,10 @@ runFunc = () => {
                 return false;
             }
         }).then(answer => {
-            console.log(answer);
+            var itemID = answer.ItemID;
+            amountQuery(itemID);
         })
-        connection.end();
+        
     });
     
     
