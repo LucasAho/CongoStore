@@ -11,10 +11,35 @@ var connection = mysql.createConnection({
     database: "bamazon_db"
 });
 
-connection.connect(function(err) {
+connection.connect(err => {
     if (err) throw err;
     runFunc();
 })
+
+
+
 runFunc = () => {
-    console.log("Hi I am an init function with no purpose, but soon i will start inquirer with inquierer.prompt({ ");
+    connection.query("SELECT * FROM products", function(err,res) {
+        if (err) throw err;
+        
+        res.forEach(element => {
+            console.log("ID: " + element.id + " || Name: " + element.product_name + " || Price: " + element.price);
+        });
+        inquirer.prompt({
+            message: "What is the ID of the item you would like to purchase \n",
+            name: "ItemID",
+            type: "input",
+            validate: value => {
+                if (isNaN(value) === false && value <= 10) {
+                    return true;
+                }
+                return false;
+            }
+        }).then(answer => {
+            console.log(answer);
+        })
+        connection.end();
+    });
+    
+    
 }
