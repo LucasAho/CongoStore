@@ -16,38 +16,64 @@ connection.connect(err => {
     runFunc();
 });
 
-stonkMath = (amt, cost) => {
-    console.log("Amount Requested: " + amt);
-    console.log("Cost per Unit: " + cost);
-    var total = cost * amt;
-    console.log("Your total cost is: " + total);
+receiptDisplay = () => {
+        var totalCost = receipt.Cost.reduce((a, b) => a + b, 0);
+        console.log(receipt, "Total cost: " + totalCost.toFixed(2));
+        connection.end()
+}
+
+var receipt = {
+    Item: [],
+    Cost: []
+}
+
+function StonkMath (id, name, amt, cost) {
+    this.id = id;
+    this.productName = name;
+    this.amtRequested = amt;
+    this.costPerUnit = cost;
+    this.transactionCost = amt * cost;
 }
 
 updateStonk = (num, id) => {
-    console.log("remaining stonks: " + num);
-    connection.query("SELECT * FROM products WHERE ID = ?", [id], function(err, resp) {
+    connection.query("SELECT * FROM products WHERE ID = ?", [id], err=> {
         if (err) throw err;
-        connection.query("UPDATE products SET stock_quantity = ? WHERE ID=?" , [num,id], function(err) {
+        connection.query("UPDATE products SET stock_quantity = ? WHERE ID = ?" , [num,id], function(err) {
             if (err) throw err;
-            console.log("Stonks updated");
-        });
-        connection.end();  
-    });
-    
+        });    
+    });    
+}
+
+pathCheck = () => {
+    inquirer.prompt({
+        message: "Item added to cart. Would you like to continue shopping?",
+        name: "ShopPath",
+        type: "confirm",
+        default: false
+    }).then (ans => {
+        switch (ans.ShopPath) {
+            case ans.ShopPath = false:
+                receiptDisplay();
+                break;
+            case ans.ShopPath = true:
+                firstPrompt();
+                break;
+        }
+    }); 
 }
 
 stonkCheck = (id , num) => {
     
-    connection.query("SELECT * FROM products WHERE ID="+ id, function(err, resp) {
+    connection.query("SELECT * FROM products WHERE ID = ?", [id], function(err, resp) {
         if (err) throw err;
         var stonkLeft = resp[0].stock_quantity;
-        var stonkPrice = resp[0].price;
-        var stonkWant = num;
-        if (stonkLeft >= stonkWant) {            
-            var newStonk = stonkLeft - stonkWant;
-            console.log("stonk left:" + newStonk);
-            updateStonk(newStonk, id);
-            stonkMath(stonkWant, stonkPrice);
+        if (stonkLeft >= num) {  
+            var newItem = new StonkMath(resp[0].id, resp[0].product_name, num, resp[0].price);  
+            receipt.Item.push(newItem.productName);
+            receipt.Cost.push(newItem.transactionCost);
+            var newStonk = stonkLeft - num;
+            pathCheck();
+            updateStonk(newStonk, id);            
         } else {
             console.log("Sorry, we do not have enough in stock, we have " + stonkLeft + " units of item remaining");
             firstPrompt();
@@ -62,14 +88,13 @@ amountQuery = (ans) => {
         name: "ItemAmount",
         type: "input", 
         validate: value => {
-            if (isNaN(value) === false) {
+            if (isNaN(value) === false && value > 0) {
                 return true;
             }
             return false;
         }
     }).then(answer => {
         stonkCheck(ans , answer.ItemAmount);
-        
     });
 }
 
