@@ -43,14 +43,14 @@ stonkCheck = (id , num) => {
         var stonkLeft = resp[0].stock_quantity;
         var stonkPrice = resp[0].price;
         var stonkWant = num;
-        if (stonkLeft >= stonkWant) {
-            
+        if (stonkLeft >= stonkWant) {            
             var newStonk = stonkLeft - stonkWant;
             console.log("stonk left:" + newStonk);
             updateStonk(newStonk, id);
             stonkMath(stonkWant, stonkPrice);
         } else {
-            console.log("out of stonks, only " + stonkLeft + " remaining");
+            console.log("Sorry, we do not have enough in stock, we have " + stonkLeft + " units of item remaining");
+            runFunc();
         }
     });
       
