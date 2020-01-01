@@ -50,7 +50,7 @@ stonkCheck = (id , num) => {
             stonkMath(stonkWant, stonkPrice);
         } else {
             console.log("Sorry, we do not have enough in stock, we have " + stonkLeft + " units of item remaining");
-            runFunc();
+            firstPrompt();
         }
     });
       
@@ -73,6 +73,24 @@ amountQuery = (ans) => {
     });
 }
 
+firstPrompt = () => {
+    inquirer.prompt({
+        message: "What is the ID of the item you would like to purchase \n",
+        name: "ItemID",
+        type: "input",
+        validate: value => {
+            if (isNaN(value) === false && value <= 10) {
+                return true;
+            }
+            return false;
+        }
+    }).then(answer => {
+        var itemID = answer.ItemID;
+        amountQuery(itemID);
+    });
+    
+}
+
 runFunc = () => {
     connection.query("SELECT * FROM products", function(err,res) {
         if (err) throw err;
@@ -81,21 +99,7 @@ runFunc = () => {
             console.log("ID: " + element.id + " || Name: " + element.product_name + " || Price: " + element.price);
             console.log("The quantity left is: " + element.stock_quantity + "\n \n");
         });
-        inquirer.prompt({
-            message: "What is the ID of the item you would like to purchase \n",
-            name: "ItemID",
-            type: "input",
-            validate: value => {
-                if (isNaN(value) === false && value <= 10) {
-                    return true;
-                }
-                return false;
-            }
-        }).then(answer => {
-            var itemID = answer.ItemID;
-            amountQuery(itemID);
-        })
-        
+        firstPrompt();
     });
     
     
