@@ -11,27 +11,49 @@ var connection = mysql.createConnection({
     database: "bamazon_db"
 });
 
-
-
-
 connection.connect(err => {
     if (err) throw err;
     runFunc();
 });
+
+stonkMath = (amt, cost) => {
+    console.log("Amount Requested: " + amt);
+    console.log("Cost per Unit: " + cost);
+    var total = cost * amt;
+    console.log("Your total cost is: " + total);
+}
+
+updateStonk = (num, id) => {
+    console.log("remaining stonks: " + num);
+    connection.query("SELECT * FROM products WHERE ID = ?", [id], function(err, resp) {
+        if (err) throw err;
+        connection.query("UPDATE products SET stock_quantity = ? WHERE ID=?" , [num,id], function(err) {
+            if (err) throw err;
+            console.log("Stonks updated");
+        });
+        connection.end();  
+    });
+    
+}
 
 stonkCheck = (id , num) => {
     
     connection.query("SELECT * FROM products WHERE ID="+ id, function(err, resp) {
         if (err) throw err;
         var stonkLeft = resp[0].stock_quantity;
+        var stonkPrice = resp[0].price;
         var stonkWant = num;
         if (stonkLeft >= stonkWant) {
-            console.log("stonks");
+            
+            var newStonk = stonkLeft - stonkWant;
+            console.log("stonk left:" + newStonk);
+            updateStonk(newStonk, id);
+            stonkMath(stonkWant, stonkPrice);
         } else {
             console.log("out of stonks, only " + stonkLeft + " remaining");
         }
     });
-    connection.end();  
+      
 }
 
 amountQuery = (ans) => {
@@ -57,7 +79,7 @@ runFunc = () => {
         
         res.forEach(element => {
             console.log("ID: " + element.id + " || Name: " + element.product_name + " || Price: " + element.price);
-            console.log("The quantity left is: " + element.stock_quantity);
+            console.log("The quantity left is: " + element.stock_quantity + "\n \n");
         });
         inquirer.prompt({
             message: "What is the ID of the item you would like to purchase \n",
