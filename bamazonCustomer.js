@@ -104,7 +104,7 @@ firstPrompt = () => {
         name: "ItemID",
         type: "input",
         validate: value => {
-            if (isNaN(value) === false && value <= 10) {
+            if (isNaN(value) === false && value <= 10 && value > 0) {
                 return true;
             }
             return false;
@@ -115,6 +115,7 @@ firstPrompt = () => {
     });
     
 }
+
 
 runFunc = () => {
     connection.query("SELECT * FROM products", function(err,res) {
