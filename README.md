@@ -19,3 +19,7 @@ This CLI allows a user to see listed store items and choose which items and how 
 #### Customer Interface
 Gif of shopping process             
 * ![Gif of Customer App](https://github.com/LucasAho/CongoStore/blob/master/assets/bamazonGIF.gif)
+Img of database table before buying products            
+* ![Img of Before Table](https://github.com/LucasAho/CongoStore/blob/master/assets/MySQLWorkbench_UAWZY4U62e.png)
+Img of database table after buying products            
+* ![Img of After Table](https://github.com/LucasAho/CongoStore/blob/master/assets/MySQLWorkbench_ffQ5qXAqHH.png)
