@@ -9,10 +9,9 @@ This CLI allows a user to see listed store items and choose which items and how 
     * Finally, a user may either repeat the process and continue shopping, or checkout and get a receipt which includes costs and item names.
 
 ## File Infrastructure
-### Main File
-    bamazonCustomer.js is the file which runs all front end user interaction, including inquierer and requests from the mysql database. 
 
-### Mysql Database
+    bamazonCustomer.js is the file which runs all front end user interaction, including inquirer and requests from the mysql database. 
+
     The CLI connects to a database named "bamazon_db" which holds the table "products". 
 
 ### Screenshots and Gifs of Functions
