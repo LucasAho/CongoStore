@@ -1,132 +1,22 @@
 # CongoStore
-Amazon like storefront on CLI. Done for week 12 of DU web dev bootcamp.
-
--NPM instal inquirer and mysql
-
-
-In this activity, you'll be creating an Amazon-like storefront with the MySQL skills you learned this unit. The app will take in orders from customers and deplete stock from the store's inventory. As a bonus task, you can program your app to track product sales across your store's departments and then provide a summary of the highest-grossing departments in the store.
-Make sure you save and require the MySQL and Inquirer npm packages in your homework files--your app will need them for data input and storage.
-
-
-
-
-
-
-
-
-Challenge #3: Supervisor View (Final Level)
-
-
-Create a new MySQL table called departments. Your table should include the following columns:
-
-
-department_id
-
-
-department_name
-
-
-over_head_costs (A dummy number you set for each department)
-
-
-
-
-Modify the products table so that there's a product_sales column, and modify your bamazonCustomer.js app so that when a customer purchases anything from the store, the price of the product multiplied by the quantity purchased is added to the product's product_sales column.
-
-Make sure your app still updates the inventory listed in the products column.
-
-
-
-Create another Node app called bamazonSupervisor.js. Running this application will list a set of menu options:
-
-
-View Product Sales by Department
-
-
-Create New Department
-
-
-
-
-When a supervisor selects View Product Sales by Department, the app should display a summarized table in their terminal/bash window. Use the table below as a guide.
-
-
-
-
-
-department_id
-department_name
-over_head_costs
-product_sales
-total_profit
-
-
-
-
-01
-Electronics
-10000
-20000
-10000
-
-
-02
-Clothing
-60000
-100000
-40000
-
-
-
-
-
-The total_profit column should be calculated on the fly using the difference between over_head_costs and product_sales. total_profit should not be stored in any database. You should use a custom alias.
-
-
-If you can't get the table to display properly after a few hours, then feel free to go back and just add total_profit to the departments table.
-
-
-Hint: You may need to look into aliases in MySQL.
-
-
-Hint: You may need to look into GROUP BYs.
-
-
-Hint: You may need to look into JOINS.
-
-
-HINT: There may be an NPM package that can log the table to the console. What's is it? Good question :)
-
-
-
-
-
-Reminder: Submission on BCS
-
-Please submit the link to the Github Repository!
-
-
-
-Minimum Requirements
-Attempt to complete homework assignment as described in instructions. If unable to complete certain portions, please pseudocode these portions to describe what remains to be completed. Adding a README.md as well as adding this homework to your portfolio are required as well and more information can be found below.
-
-
-Create a README.md
-Add a README.md to your repository describing the project. Here are some resources for creating your README.md. Here are some resources to help you along the way:
-
-
-About READMEs
-
-
-Mastering Markdown
-
-
-
-
-Add To Your Portfolio
-After completing the homework please add the piece to your portfolio. Make sure to add a link to your updated portfolio in the comments section of your homework so the TAs can easily ensure you completed this step when they are grading the assignment. To receive an 'A' on any assignment, you must link to it from your portfolio.
-
-
-One More Thing
-If you have any questions about this project or the material we have covered, please post them in the community channels in slack so that your fellow developers can help you! If you're still having trouble, you can come to office hours for assistance from your instructor and TAs.
-Good Luck!
+Amazon like storefront on CLI, done for week 12 of DU web dev bootcamp. This program will list an inventory of store items held in a mysql database and allow a user to select items to purchase. By "buying" an item, the user's command will also decrease the database inventory accordingly. To run your own version of the Congo Store, they will need to install the node packages inquirer and mysql, and follow the gifs at the base of the README to see Congo's functionality. User will also need their own database. 
+
+## App Purpose and Function
+This CLI allows a user to see listed store items and choose which items and how many of each item to buy. The user can use the app by typing 
+    "node bamazonCustomer.js" which will be followed by a list of items with IDs.
+    * User must enter a number from 1-10 corrosponding to each id
+    * User will then be asked for a quantity of the item they plan to purchase
+    * Finally, a user may either repeat the process and continue shopping, or checkout and get a receipt which includes costs and item names.
+
+## File Infrastructure
+### Main File
+    bamazonCustomer.js is the file which runs all front end user interaction, including inquierer and requests from the mysql database. 
+
+### Mysql Database
+    The CLI connects to a database named "bamazon_db" which holds the table "products". 
+
+### Screenshots and Gifs of Functions
+
+#### Customer Interface
+Gif of shopping process             
+* ![Gif of Customer App](https://github.com/LucasAho/CongoStore/blob/master/assets/bamazonGIF.gif)

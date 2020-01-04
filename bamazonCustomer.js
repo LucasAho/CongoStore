@@ -11,22 +11,26 @@ var connection = mysql.createConnection({
     database: "bamazon_db"
 });
 
+//Starts init function with connection
 connection.connect(err => {
     if (err) throw err;
     runFunc();
 });
 
+//Function displays user receipt
 receiptDisplay = () => {
         var totalCost = receipt.Cost.reduce((a, b) => a + b, 0);
         console.log(receipt, "Total cost: " + totalCost.toFixed(2));
         connection.end()
 }
 
+//Receipt object starts as empty
 var receipt = {
     Item: [],
     Cost: []
 }
 
+//Constructor builds a receipt as user shops.
 function StonkMath (id, name, amt, cost) {
     this.id = id;
     this.productName = name;
@@ -35,6 +39,7 @@ function StonkMath (id, name, amt, cost) {
     this.transactionCost = amt * cost;
 }
 
+//Function updates mysql database
 updateStonk = (num, id) => {
     connection.query("SELECT * FROM products WHERE ID = ?", [id], err=> {
         if (err) throw err;
@@ -44,6 +49,7 @@ updateStonk = (num, id) => {
     });    
 }
 
+//Function checks if user would like to checkout
 pathCheck = () => {
     inquirer.prompt({
         message: "Item added to cart. Would you like to continue shopping?",
@@ -62,6 +68,7 @@ pathCheck = () => {
     }); 
 }
 
+//Function checks for suffiecient quantity and then notifies user or adds item to cart
 stonkCheck = (id , num) => {
     
     connection.query("SELECT * FROM products WHERE ID = ?", [id], function(err, resp) {
@@ -82,6 +89,7 @@ stonkCheck = (id , num) => {
       
 }
 
+//Function asks user for quantity to purchase
 amountQuery = (ans) => {
     inquirer.prompt({
         message: "How much of item " + ans + " would you like to purchase? \n",
@@ -98,6 +106,7 @@ amountQuery = (ans) => {
     });
 }
 
+//Prompt asks user  what they would like to purchase and gives an input field
 firstPrompt = () => {
     inquirer.prompt({
         message: "What is the ID of the item you would like to purchase \n",
@@ -105,7 +114,7 @@ firstPrompt = () => {
         type: "input",
         validate: value => {
             if (isNaN(value) === false && value <= 10 && value > 0) {
-                return true;
+                return true;i
             }
             return false;
         }
@@ -116,14 +125,13 @@ firstPrompt = () => {
     
 }
 
-
+//Function initializes store, listing all items and calling the inquierer prompts
 runFunc = () => {
     connection.query("SELECT * FROM products", function(err,res) {
         if (err) throw err;
         
         res.forEach(element => {
-            console.log("ID: " + element.id + " || Name: " + element.product_name + " || Price: " + element.price);
-            console.log("The quantity left is: " + element.stock_quantity + "\n \n");
+            console.log("ID: " + element.id + " || Name: " + element.product_name + " || Price: " + element.price + "\n");
         });
         firstPrompt();
     });
